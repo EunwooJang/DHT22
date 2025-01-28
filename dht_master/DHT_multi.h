@@ -33,5 +33,5 @@ private:
     bool requestResendData(uint8_t slaveId, char* buffer);
 
     // Validate received data
-    bool validateReceivedData(const char* data);
+    bool validateReceivedData(const char* data, uint8_t slaveId);
 };
