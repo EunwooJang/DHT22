@@ -1,37 +1,31 @@
-// FILE: DHT_multi.h
-// AUTHOR: Custom
-// VERSION: 1.0.0
-// PURPOSE: Manage communication with multiple DHT sensor slaves
+#ifndef DHT_MULTI_H
+#define DHT_MULTI_H
 
-#pragma once
+#include <Arduino.h>
 
-#include <SoftwareSerial.h>
-
+// DHTMulti 클래스 정의
 class DHTMulti {
 public:
-    DHTMulti(uint8_t rxPin, uint8_t txPin, uint8_t slaveAmount);
+  DHTMulti(uint8_t slaveAmount);
 
-    // Initialize HC-12 communication
-    void begin();
+  // 초기화 함수
+  void begin();
 
-    // Request data from all slaves and return combined results
-    // Returns the total combined data of all slaves
-    // Each slave contributes 20 bytes of data
-    char* getAllSensorData();
+  // 모든 슬레이브의 센서 데이터를 수집
+  char* getAllSensorData();
 
 private:
-    SoftwareSerial HC12;
-    uint8_t slaveAmount;
+  uint8_t slaveAmount;    // 슬레이브 개수
+  char* combinedData;     // 수집된 데이터 저장
 
-    // Buffer to store combined data
-    char* combinedData;
+  // 특정 슬레이브에 데이터 요청
+  bool requestSensorData(uint8_t slaveId, char* buffer);
 
-    // Request data from a specific slave
-    bool requestSensorData(uint8_t slaveId, char* buffer);
+  // 특정 슬레이브에 데이터 재요청
+  bool requestResendData(uint8_t slaveId, char* buffer);
 
-    // Request data resend from a specific slave
-    bool requestResendData(uint8_t slaveId, char* buffer);
-
-    // Validate received data
-    bool validateReceivedData(const char* data, uint8_t slaveId);
+  // 수신된 데이터 검증
+  bool validateReceivedData(const char* data, uint8_t slaveId);
 };
+
+#endif
