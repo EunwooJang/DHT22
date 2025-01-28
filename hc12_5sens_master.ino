@@ -1,3 +1,5 @@
+//CODE by Minseo Kim
+
 void setup() {
   Serial.begin(9600);    // USB 시리얼 통신
   Serial1.begin(9600);   // HC-12 통신
