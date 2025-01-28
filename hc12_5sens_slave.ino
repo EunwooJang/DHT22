@@ -1,3 +1,5 @@
+//CODE by Minseo Kim
+
 #include <DHT.h>
 
 // DHT22 핀 및 타입 정의
