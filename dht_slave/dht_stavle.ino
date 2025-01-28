@@ -19,7 +19,7 @@ DHT22Raw dht4;
 DHT22Raw dht5;
 
 // 슬레이브 ID 설정
-const uint8_t SLAVE_ID = 1; // 변경 가능
+const uint8_t SLAVE_ID = 1; // 이거는 반드시 변경해야함
 
 // 고정된 헤더를 저장할 배열
 char fixedHeaderData[5]; // 동적으로 설정되는 헤더
