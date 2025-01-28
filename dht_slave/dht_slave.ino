@@ -1,8 +1,7 @@
 #include "DHT_edit.h"
-#include <SoftwareSerial.h>
 
-// HC-12 핀 설정 (RX, TX)
-SoftwareSerial HC12(10, 11); // HC-12 모듈 연결 핀 (TX, RX)
+// HC-12 핀 설정: Serial 포트를 HC-12에 직접 연결
+#define HC12 Serial
 
 // DHT 핀 설정
 #define DHTPIN1 20
@@ -19,7 +18,7 @@ DHT22Raw dht4;
 DHT22Raw dht5;
 
 // 슬레이브 ID 설정
-const uint8_t SLAVE_ID = 1; // 이거는 반드시 변경해야함
+const uint8_t SLAVE_ID = 1; // 이 값은 반드시 변경 가능해야 함
 
 // 고정된 헤더를 저장할 배열
 char fixedHeaderData[5]; // 동적으로 설정되는 헤더
