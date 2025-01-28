@@ -1,6 +1,6 @@
 // FILE: DHT_multi.cpp
 // AUTHOR: Custom
-// VERSION: 1.0.0
+// VERSION: 1.1.0
 // PURPOSE: Manage communication with multiple DHT sensor slaves
 
 #include "DHT_multi.h"
@@ -27,7 +27,11 @@ char* DHTMulti::getAllSensorData() {
             Serial.print("Slave ");
             Serial.print(i);
             Serial.println(" failed. Requesting resend...");
-            requestResendData(i, buffer);
+            if (!requestResendData(i, buffer)) {
+                Serial.print("Slave ");
+                Serial.print(i);
+                Serial.println(" failed again.");
+            }
         }
 
         // Append valid data to combinedData
@@ -43,12 +47,15 @@ bool DHTMulti::requestSensorData(uint8_t slaveId, char* buffer) {
 
     HC12.write(command);
 
-    if (HC12.available() >= 24) {
-        HC12.readBytes(buffer, 24);
-        return validateReceivedData(buffer, slaveId);
+    unsigned long startTime = millis();
+    while ((millis() - startTime) < 100) { // Wait up to 100ms for response
+        if (HC12.available() >= 24) {
+            HC12.readBytes(buffer, 24);
+            return validateReceivedData(buffer, slaveId);
+        }
     }
 
-    return false;
+    return false; // Timed out
 }
 
 bool DHTMulti::requestResendData(uint8_t slaveId, char* buffer) {
@@ -57,12 +64,15 @@ bool DHTMulti::requestResendData(uint8_t slaveId, char* buffer) {
 
     HC12.write(command);
 
-    if (HC12.available() >= 24) {
-        HC12.readBytes(buffer, 24);
-        return validateReceivedData(buffer, slaveId);
+    unsigned long startTime = millis();
+    while ((millis() - startTime) < 100) { // Wait up to 100ms for response
+        if (HC12.available() >= 24) {
+            HC12.readBytes(buffer, 24);
+            return validateReceivedData(buffer, slaveId);
+        }
     }
 
-    return false;
+    return false; // Timed out
 }
 
 bool DHTMulti::validateReceivedData(const char* data, uint8_t slaveId) {
