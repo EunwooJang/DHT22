@@ -1,40 +1,36 @@
-// FILE: main.ino
-// AUTHOR: Custom
-// VERSION: 1.0.0
-// PURPOSE: Main file to request and process data from multiple DHT sensor slaves
-
 #include "DHT_multi.h"
+#include <SoftwareSerial.h>
 
-#define RX_PIN 10
-#define TX_PIN 11
-#define TEMPERATURE_SENSOR_SLAVE_AMOUNT 5
+// HC-12 핀 설정 (RX, TX)
+SoftwareSerial HC12(10, 11); // HC-12 모듈 연결 핀 (TX, RX)
 
-DHTMulti dhtMulti(RX_PIN, TX_PIN, TEMPERATURE_SENSOR_SLAVE_AMOUNT);
+// 슬레이브 개수 설정
+#define SLAVE_AMOUNT 5
+
+// DHTMulti 객체 생성
+DHTMulti dhtMulti(SLAVE_AMOUNT);
 
 void setup() {
-    Serial.begin(9600);
-    dhtMulti.begin();
+  Serial.begin(9600);
+  HC12.begin(9600); // HC-12 통신 시작
+
+  dhtMulti.begin(); // DHTMulti 초기화
 }
 
 void loop() {
-    char* data = dhtMulti.getAllSensorData();
+  char* data = dhtMulti.getAllSensorData();
 
-    // Process and print combined data
-    for (uint8_t i = 0; i < TEMPERATURE_SENSOR_SLAVE_AMOUNT; i++) {
-        uint32_t rawData;
-        memcpy(&rawData, &data[i * 20], 4); // Example: First 4 bytes of each sensor
-
-        float temperature = (rawData & 0xFFFF) / 10.0;
-        float humidity = (rawData >> 16) / 10.0;
-
-        Serial.print("Slave ");
-        Serial.print(i + 1);
-        Serial.print(" - Humidity: ");
-        Serial.print(humidity);
-        Serial.print("%, Temperature: ");
-        Serial.print(temperature);
-        Serial.println("°C");
+  // 수집된 데이터를 출력
+  for (int i = 0; i < SLAVE_AMOUNT; i++) {
+    Serial.print("Slave ");
+    Serial.print(i + 1);
+    Serial.print(": ");
+    for (int j = 0; j < 20; j++) {
+      Serial.print(data[i * 20 + j], HEX);
+      Serial.print(" ");
     }
+    Serial.println();
+  }
 
-    delay(3000); // Wait for 3 seconds before next request
+  delay(3000); // 3초 대기 후 다음 데이터 요청
 }
