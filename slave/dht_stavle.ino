@@ -18,14 +18,20 @@ DHT22Raw dht3;
 DHT22Raw dht4;
 DHT22Raw dht5;
 
+// 슬레이브 ID 설정
+const uint8_t SLAVE_ID = 1; // 변경 가능
+
 // 고정된 헤더를 저장할 배열
-char fixedHeaderData[5] = "D1TD"; // 고정 헤더
+char fixedHeaderData[5]; // 동적으로 설정되는 헤더
 
 // 이전 측정 데이터를 저장할 변수
 char lastSentData[25]; // 4바이트 헤더 + 20바이트 센서 데이터
 
 void setup() {
   HC12.begin(9600); // HC-12 시리얼 통신 시작
+
+  // 동적으로 헤더 초기화
+  snprintf(fixedHeaderData, sizeof(fixedHeaderData), "D%dTD", SLAVE_ID);
 
   // 이전 전송 데이터 초기화
   memset(lastSentData, 0, sizeof(lastSentData));
@@ -45,12 +51,15 @@ void loop() {
     HC12.readBytes(command, 4);
     command[4] = '\0';
 
-    // 데이터 요구 명령어 처리 (S1TD)
-    if (strcmp(command, "S1TD") == 0) {
+    // 데이터 요구 명령어 처리 (e.g., S1TD for SLAVE_ID = 1)
+    char expectedCommand[5];
+    snprintf(expectedCommand, sizeof(expectedCommand), "S%dTD", SLAVE_ID);
+    if (strcmp(command, expectedCommand) == 0) {
       sendSensorData();
     }
-    // 이전 데이터 재전송 명령어 처리 (S1TU)
-    else if (strcmp(command, "S1TU") == 0) {
+    // 이전 데이터 재전송 명령어 처리 (e.g., S1TU for SLAVE_ID = 1)
+    snprintf(expectedCommand, sizeof(expectedCommand), "S%dTU", SLAVE_ID);
+    if (strcmp(command, expectedCommand) == 0) {
       resendLastData();
     }
   }
@@ -68,7 +77,7 @@ void sendSensorData() {
   readSensorData(dht4, DHTPIN4, &rawData[12]);
   readSensorData(dht5, DHTPIN5, &rawData[16]);
 
-  // "D1TD" 헤더 전송
+  // 동적으로 설정된 헤더 전송
   memcpy(lastSentData, fixedHeaderData, 4); // 헤더 저장
   memcpy(&lastSentData[4], rawData, 20);    // 센서 데이터 저장
 
