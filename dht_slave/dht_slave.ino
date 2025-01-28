@@ -46,7 +46,7 @@ void setup() {
 
 void loop() {
   // HC-12로부터 명령 수신 대기
-  if (HC12.available() >= 4) {
+  if (HC12.available() == 4) {
     char command[5];
     HC12.readBytes(command, 4);
     command[4] = '\0';
