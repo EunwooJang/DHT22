@@ -5,11 +5,11 @@
 SoftwareSerial HC12(10, 11); // HC-12 모듈 연결 핀 (TX, RX)
 
 // DHT 핀 설정
-#define DHTPIN1 2
-#define DHTPIN2 3
-#define DHTPIN3 4
-#define DHTPIN4 5
-#define DHTPIN5 6
+#define DHTPIN1 20
+#define DHTPIN2 19
+#define DHTPIN3 18
+#define DHTPIN4 14
+#define DHTPIN5 15
 
 // DHT 객체 생성
 DHT22Raw dht1;
