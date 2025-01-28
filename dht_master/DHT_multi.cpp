@@ -45,7 +45,7 @@ bool DHTMulti::requestSensorData(uint8_t slaveId, char* buffer) {
 
     if (HC12.available() >= 24) {
         HC12.readBytes(buffer, 24);
-        return validateReceivedData(buffer);
+        return validateReceivedData(buffer, slaveId);
     }
 
     return false;
@@ -59,17 +59,21 @@ bool DHTMulti::requestResendData(uint8_t slaveId, char* buffer) {
 
     if (HC12.available() >= 24) {
         HC12.readBytes(buffer, 24);
-        return validateReceivedData(buffer);
+        return validateReceivedData(buffer, slaveId);
     }
 
     return false;
 }
 
-bool DHTMulti::validateReceivedData(const char* data) {
-    if (strncmp(data, "D1TD", 4) != 0) {
+bool DHTMulti::validateReceivedData(const char* data, uint8_t slaveId) {
+    char expectedHeader[5];
+    snprintf(expectedHeader, sizeof(expectedHeader), "D%dTD", slaveId);
+
+    if (strncmp(data, expectedHeader, 4) != 0) {
         return false; // Header mismatch
     }
 
-    // Length check is implied by buffer size
+    // Additional data validation logic could go here if needed
+
     return true;
 }
