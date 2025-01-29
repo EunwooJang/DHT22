@@ -45,15 +45,22 @@ bool DHTMulti::requestSensorData(uint8_t slaveId, char* buffer) {
 
   HC12.write(command);
 
-  unsigned long startTime = millis();
-  while ((millis() - startTime) < 200) { // Wait up to 100ms for response
-    if (HC12.available() >= 24) {
-      HC12.readBytes(buffer, 24);
-      return validateReceivedData(buffer, slaveId);
-    }
-  }
+	if (HC12.available()) {
+ 		unsigned long startTime = millis();
+  	while ((millis() - startTime) < 200) { // Wait up to 100ms for response
+    	if (HC12.available() >= 24) {
+      	HC12.readBytes(buffer, 24);
+      	return validateReceivedData(buffer, slaveId);
+    	}
+  	}
+		
+		while (HC12.available()) {
+			HC12.read();
+		}
+	}
 
   return false; // Timed out
+
 }
 
 bool DHTMulti::requestResendData(uint8_t slaveId, char* buffer) {
@@ -62,15 +69,22 @@ bool DHTMulti::requestResendData(uint8_t slaveId, char* buffer) {
 
   HC12.write(command);
 
-  unsigned long startTime = millis();
-  while ((millis() - startTime) < 200) { // Wait up to 100ms for response
-    if (HC12.available() >= 24) {
-      HC12.readBytes(buffer, 24);
-      return validateReceivedData(buffer, slaveId);
-    }
-  }
+	if (HC12.available()) {
+ 		unsigned long startTime = millis();
+  	while ((millis() - startTime) < 200) { // Wait up to 100ms for response
+    	if (HC12.available() >= 24) {
+      	HC12.readBytes(buffer, 24);
+      	return validateReceivedData(buffer, slaveId);
+    	}
+  	}
+		
+		while (HC12.available()) {
+			HC12.read();
+		}
+	}
 
   return false; // Timed out
+
 }
 
 bool DHTMulti::validateReceivedData(const char* data, uint8_t slaveId) {
