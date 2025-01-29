@@ -51,10 +51,6 @@ bool DHTMulti::requestSensorData(uint8_t slaveId, char* buffer) {
       HC12.readBytes(buffer, 24);
       return validateReceivedData(buffer, slaveId);
     }
-		// read로 쌓인 버퍼 초기화
-		while (HC12.available()) {
-			HC12.read();
-		}
   }
 
   return false; // Timed out
@@ -72,10 +68,6 @@ bool DHTMulti::requestResendData(uint8_t slaveId, char* buffer) {
       HC12.readBytes(buffer, 24);
       return validateReceivedData(buffer, slaveId);
     }
-		// read로 쌓인 버퍼 초기화
-		while (HC12.available()) {
-			HC12.read();
-		}
   }
 
   return false; // Timed out
