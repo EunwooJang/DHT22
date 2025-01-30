@@ -50,7 +50,7 @@ void loop() {
 
     // 최대 10ms 동안 기다리면서 4바이트 도착 여부 확인
     while ((millis() - startTime) < 10) {
-      if (HC12.available() == 4) {  
+      if (HC12.available() => 4) {  
     			char receivedCommand[4];  // 수신 데이터 저장
     			HC12.readBytes(receivedCommand, 4);
 
