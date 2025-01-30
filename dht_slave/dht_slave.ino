@@ -35,12 +35,6 @@ void setup() {
   // 이전 전송 데이터 초기화
   memset(lastSentData, 0, sizeof(lastSentData));
 
-  // DHT 센서 초기화
-  dht1.reset();
-  dht2.reset();
-  dht3.reset();
-  dht4.reset();
-  dht5.reset();
 }
 
 void loop() {
