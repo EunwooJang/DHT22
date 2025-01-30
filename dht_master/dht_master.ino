@@ -11,7 +11,7 @@ SoftwareSerial HC12(10, 11); // HC-12 모듈 연결 핀 (TX, RX)
 DHTMulti dhtMulti(SLAVE_AMOUNT);
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   HC12.begin(9600); // HC-12 통신 시작
 
   dhtMulti.begin(); // DHTMulti 초기화
