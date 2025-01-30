@@ -54,9 +54,9 @@ void loop() {
         HC12.readBytes(command, 4);
 
         if (command[0] == 'S' && command[1] == ('0' + SLAVE_ID)) {
-      			if (command[2] == 'M' && command[3] =='D') {    
+      			if (command[2] == 'T' && command[3] =='D') {    
 						sendSensorData();
-    				}	else if (command[2] == 'M' && command[3] =='U') {
+    				}	else if (command[2] == 'T' && command[3] =='U') {
 						resendLastData();
 					}   
 				}
