@@ -15,8 +15,6 @@ class DHT22Raw
 public:
     DHT22Raw();
 
-    void reset();
-
     // Reads the raw 32-bit data from DHT22
     // Returns:
     //   - 32-bit combined humidity (16-bit) and temperature (16-bit) data
@@ -25,5 +23,8 @@ public:
 
 private:
     uint8_t _bits[5];
+    
+    void reset();
+    
     int _readSensor(uint8_t pin, uint8_t wakeupDelay);
 };
