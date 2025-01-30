@@ -3,6 +3,9 @@
 // HC-12 핀 설정: Serial 포트를 HC-12에 직접 연결
 #define HC12 Serial
 
+#define SLAVE_ID 1
+#define SENSOR_TYPE 'T'
+
 // DHT 핀 설정
 #define DHTPIN1 20
 #define DHTPIN2 19
@@ -17,9 +20,9 @@ DHT22Raw dht3;
 DHT22Raw dht4;
 DHT22Raw dht5;
 
-// 슬레이브 ID 설정
-const uint8_t SLAVE_ID = 1; // 이 값은 반드시 변경 가능해야 함
-
+char command1[5];
+char command2[5];
+  
 // 고정된 헤더를 저장할 배열
 char fixedHeaderData[5]; // 동적으로 설정되는 헤더
 
@@ -28,6 +31,10 @@ char lastSentData[25]; // 4바이트 헤더 + 20바이트 센서 데이터
 
 void setup() {
   HC12.begin(9600); // HC-12 시리얼 통신 시작
+
+	// 명령어 문자열 생성
+  snprintf(command1, sizeof(command1), "S%d%cD", SLAVE_ID, SENSOR_TYPE);
+  snprintf(command2, sizeof(command2), "S%d%cU", SLAVE_ID, SENSOR_TYPE);
 
   // 동적으로 헤더 초기화
   snprintf(fixedHeaderData, sizeof(fixedHeaderData), "D%dTD", SLAVE_ID);
@@ -43,20 +50,19 @@ void loop() {
 
     // 최대 10ms 동안 기다리면서 4바이트 도착 여부 확인
     while ((millis() - startTime) < 10) {
-      if (HC12.available() == 4) {  // 4바이트가 도착하면 처리
-        char command[4];
-        HC12.readBytes(command, 4);
+      if (HC12.available() == 4) {  
+    			char receivedCommand[4];  // 수신 데이터 저장
+    			HC12.readBytes(receivedCommand, 4);
 
-        if (command[0] == 'S' && command[1] == ('0' + SLAVE_ID)) {
-      			if (command[2] == 'T' && command[3] =='D') {    
-						sendSensorData();
-    				}	else if (command[2] == 'T' && command[3] =='U') {
-						resendLastData();
-					}   
-				}
-
-        return; // 정상 처리 후 루프 종료
-      }
+    			// 수신된 명령어와 미리 정의된 명령어 비교
+    			if (memcmp(receivedCommand, command1, 4) == 0) {
+       		sendSensorData();
+    			} else if (memcmp(receivedCommand, command2, 4) == 0) {
+       		resendLastData();
+    			}
+				
+				return;
+			}
     }
 
     // 10ms가 지나도 4바이트가 안 모이면 버퍼 초기화
