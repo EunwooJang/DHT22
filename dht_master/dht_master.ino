@@ -18,7 +18,7 @@ void loop() {
   char* data = dhtMulti.getAllSensorData();
 
   // 수집된 데이터를 출력
-  for (int i = 0; i < SLAVE_AMOUNT; i++) {
+  for (int i = 0; i < TEMP_SLAVE_AMOUNT; i++) {
     Serial.print("Slave ");
     Serial.print(i + 1);
     Serial.println(": ");
