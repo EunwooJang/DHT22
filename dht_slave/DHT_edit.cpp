@@ -1,8 +1,3 @@
-// FILE: DHT22Raw.cpp
-// AUTHOR: Custom
-// VERSION: 1.0.1
-// PURPOSE: DHT22 Sensor library for standalone Arduino (return 32-bit raw data)
-
 #include "DHT_edit.h"
 #include <Arduino.h>
 
