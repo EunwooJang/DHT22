@@ -1,8 +1,3 @@
-// FILE: DHT_edit.h
-// AUTHOR: Custom
-// VERSION: 1.0.1
-// PURPOSE: DHT22 Sensor library for standalone Arduino (return 32-bit raw data)
-
 #pragma once
 
 #include <Arduino.h> // Arduino 데이터 타입 및 함수 사용
