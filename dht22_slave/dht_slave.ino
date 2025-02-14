@@ -7,8 +7,8 @@
 #define DHTPIN1 20
 #define DHTPIN2 19
 #define DHTPIN3 18
-#define DHTPIN4 14
-#define DHTPIN5 15
+#define DHTPIN4 15
+#define DHTPIN5 14
 
 // DHT 객체 생성
 DHT22Raw dht1;
