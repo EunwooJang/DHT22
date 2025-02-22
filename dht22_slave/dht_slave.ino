@@ -1,6 +1,6 @@
 #include "DHT_edit.h"
 
-#define SLAVE_ID 3
+#define SLAVE_ID 1
 #define SENSOR_TYPE 'T'
 
 // DHT 핀 설정
